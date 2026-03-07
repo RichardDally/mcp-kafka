@@ -1,0 +1,19 @@
+[project]
+name = "kafka-history-mcp"
+version = "0.1.0"
+description = "Kafka-to-Redis Ingestor with FastMCP API"
+requires-python = ">=3.14"
+dependencies = [
+    "fastmcp>=0.4.1",
+    "confluent-kafka>=2.3.0",
+    "redis>=5.0.1",
+    "pydantic-settings>=2.1.0",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.uv]
+dev-dependencies = ["ruff>=0.3.0"]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 88
