@@ -47,5 +47,12 @@ def start_client():
     from mcp_kafka.mcp_client import run_client
     asyncio.run(run_client())
 
+@app.command()
+def start_client():
+    """Start the Python MCP Client testing script to programmatically call tools over stdio."""
+    import asyncio
+    from mcp_kafka.mcp_client import run_client
+    asyncio.run(run_client())
+
 if __name__ == "__main__":
     app()
