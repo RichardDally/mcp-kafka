@@ -54,17 +54,17 @@ This project demonstrates a Model Context Protocol (MCP) server that exposes dat
 5. **Run the MCP Server**
    Start the FastMCP API to expose the data to external tools (AI agents) via stdio:
    ```bash
-   uv run mcp-kafka api
+   uv run mcp-kafka start-server
    ```
 
 6. **Test with MCP Inspector (GUI)**
    If you want to test and see your MCP tools in the browser manually, you can use the official MCP Inspector:
    ```bash
-   npx -y @modelcontextprotocol/inspector uv run mcp-kafka api
+   npx -y @modelcontextprotocol/inspector uv run mcp-kafka start-server
    ```
    *Note: If you are using PowerShell on Windows and `npx` is blocked, you can run:*
    ```bat
-   cmd.exe /c npx -y @modelcontextprotocol/inspector uv run mcp-kafka api
+   cmd.exe /c npx -y @modelcontextprotocol/inspector uv run mcp-kafka start-server
    ```
    *Then open [http://localhost:5173](http://localhost:5173)*
 

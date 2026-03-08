@@ -1,7 +1,7 @@
 import logging
 import signal
 import redis
-from config import settings
+from mcp_kafka.config import settings
 from confluent_kafka import Consumer
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroDeserializer

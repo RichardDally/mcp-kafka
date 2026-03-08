@@ -17,8 +17,8 @@ def start_ingestor():
     ingestor_srv.start()
 
 @app.command()
-def start_api():
-    """Start the FastMCP API."""
+def start_server():
+    """Start the FastMCP Server."""
     from mcp_kafka.mcp_server import mcp
     mcp.run()
 
@@ -39,6 +39,13 @@ def feed(topic_name: str = "my-history"):
     """Feed the specified Kafka topic with 300 sequential dummy records across 3 user IDs."""
     from mcp_kafka.feed_topic import feed_topic
     feed_topic(topic_name=topic_name)
+
+@app.command()
+def start_client():
+    """Start the Python MCP Client testing script to programmatically call tools over stdio."""
+    import asyncio
+    from mcp_kafka.mcp_client import run_client
+    asyncio.run(run_client())
 
 if __name__ == "__main__":
     app()

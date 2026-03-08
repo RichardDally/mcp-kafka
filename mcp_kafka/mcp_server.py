@@ -1,7 +1,7 @@
 import logging
 import redis
 from fastmcp import FastMCP
-from config import settings
+from mcp_kafka.config import settings
 
 logging.basicConfig(level=settings.log_level, format='%(asctime)s [%(levelname)s] %(message)s')
 logger = logging.getLogger("HistoryAPI")
