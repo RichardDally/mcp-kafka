@@ -19,7 +19,7 @@ def start_ingestor():
 @app.command()
 def start_api():
     """Start the FastMCP API."""
-    from mcp_kafka.mcp_api import mcp
+    from mcp_kafka.mcp_server import mcp
     mcp.run()
 
 @app.command()

@@ -23,4 +23,3 @@ def count_action(action_name: str) -> int:
 
 if __name__ == "__main__":
     mcp.run()
-    

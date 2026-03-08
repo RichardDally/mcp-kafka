@@ -9,7 +9,7 @@ This project demonstrates a Model Context Protocol (MCP) server that exposes dat
 1. **Kafka Cluster:** Local Kafka broker + Schema Registry (runs via Docker Compose).
 2. **Redis:** In-memory datastore for aggregating message metrics (runs via Docker Compose).
 3. **Ingestor (`mcp_kafka/kafka_to_redis.py`):** Consumes messages from Kafka, deserializes Avro payloads, and aggregates counts in Redis.
-4. **FastMCP API (`mcp_kafka/mcp_api.py`):** Provides MCP tools (`get_usage_metrics`, `count_action`) for AI agents to query the aggregated data.
+4. **FastMCP API (`mcp_kafka/mcp_server.py`):** Provides MCP tools (`get_usage_metrics`, `count_action`) for AI agents to query the aggregated data.
 
 ## Prerequisites
 - Docker and Docker Compose
@@ -52,10 +52,21 @@ This project demonstrates a Model Context Protocol (MCP) server that exposes dat
    ```
 
 5. **Run the MCP Server**
-   Start the FastMCP API to expose the data to external tools (AI agents):
+   Start the FastMCP API to expose the data to external tools (AI agents) via stdio:
    ```bash
    uv run mcp-kafka api
    ```
+
+6. **Test with MCP Inspector (GUI)**
+   If you want to test and see your MCP tools in the browser manually, you can use the official MCP Inspector:
+   ```bash
+   npx -y @modelcontextprotocol/inspector uv run mcp-kafka api
+   ```
+   *Note: If you are using PowerShell on Windows and `npx` is blocked, you can run:*
+   ```bat
+   cmd.exe /c npx -y @modelcontextprotocol/inspector uv run mcp-kafka api
+   ```
+   *Then open [http://localhost:5173](http://localhost:5173)*
 
 ## Configuration
 Settings are managed via Pydantic settings in `config.py`. You can override them using environment variables or a `.env` file.
