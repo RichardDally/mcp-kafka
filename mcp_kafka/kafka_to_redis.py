@@ -21,8 +21,19 @@ class Ingestor:
         )
         
         sr_client = SchemaRegistryClient({'url': settings.schema_registry_url})
-        with open("history_schema.avsc") as f:
-            self.avro_deser = AvroDeserializer(sr_client, f.read())
+        
+        import importlib.resources
+        import pathlib
+        
+        try:
+            # When running from a built wheel / installed package
+            schema_text = importlib.resources.files("mcp_kafka").joinpath("history_schema.avsc").read_text()
+        except Exception:
+            # Fallback for local script execution
+            schema_path = pathlib.Path(__file__).parent / "history_schema.avsc"
+            schema_text = schema_path.read_text(encoding="utf-8")
+
+        self.avro_deser = AvroDeserializer(sr_client, schema_text)
 
         self.consumer = Consumer({
             'bootstrap.servers': settings.kafka_bootstrap_servers,
@@ -38,17 +49,31 @@ class Ingestor:
         self.consumer.subscribe([settings.kafka_topic])
         logger.info("Ingestor started. Monitoring Kafka...")
         try:
+            import json
             while self.running:
                 msg = self.consumer.poll(1.0)
                 if msg is None: continue
                 
-                val = self.avro_deser(msg.value(), SerializationContext(msg.topic(), MessageField.VALUE))
-                action = val.get('action')
+                val = None
+                try:
+                    # Attempt Confluent Schema Registry Avro deserialization
+                    val = self.avro_deser(msg.value(), SerializationContext(msg.topic(), MessageField.VALUE))
+                except Exception as e:
+                    # Fallback if there is no magic byte (e.g., standard JSON sent manually from Kafka UI)
+                    try:
+                        val = json.loads(msg.value().decode('utf-8'))
+                    except Exception as json_e:
+                        logger.warning(f"Failed to deserialize message: AvroError({e}), JSONError({json_e}). Skipping.")
+                        continue
                 
-                pipe = self.r.pipeline()
-                pipe.incr("total_msg_count")
-                pipe.hincrby("action_counts", action, 1)
-                pipe.execute()
+                if val:
+                    action = val.get('action')
+                    if action:
+                        pipe = self.r.pipeline()
+                        pipe.incr("total_msg_count")
+                        pipe.hincrby("action_counts", action, 1)
+                        pipe.execute()
+                        logger.info(f"Pushed data to Redis: action '{action}'")
         finally:
             self.consumer.close()
             logger.info("Clean shutdown complete.")

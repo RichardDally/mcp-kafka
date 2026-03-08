@@ -3,8 +3,8 @@
   "name": "UserHistory",
   "namespace": "com.example",
   "fields": [
-    {"name": "user_id", "type": "string"},
-    {"name": "action", "type": "string"},
+    {"name": "user_id", "type": "int"},
+    {"name": "action", "type": {"type": "enum", "name": "ActionType", "symbols": ["think", "play", "enter", "exit"]}},
     {"name": "timestamp", "type": "long"}
   ]
 }

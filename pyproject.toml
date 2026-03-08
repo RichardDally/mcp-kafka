@@ -9,9 +9,15 @@ dependencies = [
     "redis>=5.0.1",
     "pydantic-settings>=2.1.0",
     "python-dotenv>=1.0.0",
+    "fastavro>=1.12.1",
+    "typer>=0.24.1",
 ]
 
+[project.scripts]
+mcp-kafka = "mcp_kafka.cli:app"
+
 [tool.uv]
+package = true
 dev-dependencies = ["ruff>=0.3.0"]
 
 [tool.ruff]

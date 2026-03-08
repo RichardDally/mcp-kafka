@@ -38,6 +38,14 @@ services:
     ports:
       - "6379:6379"
 
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    depends_on:
+      - redis
+    ports:
+      - "8001:5540"
+
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
