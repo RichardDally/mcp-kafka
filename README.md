@@ -19,11 +19,13 @@ This project demonstrates a Model Context Protocol (MCP) server that exposes dat
 ## Setup
 
 1. **Start Infrastructure**
-   Spin up Kafka, Schema Registry, Kafka UI, and Redis:
+   Spin up Kafka, Schema Registry, Kafka UI, Redis, and RedisInsight:
    ```bash
    docker-compose up -d
    ```
-   *Kafka UI is available at http://localhost:8080*
+   * **Kafka UI:** Access via [http://localhost:8080](http://localhost:8080)
+   * **RedisInsight UI:** Access via [http://localhost:8001](http://localhost:8001)
+     * To connect RedisInsight to the datastore, click "Add Redis Database" and use `redis` as the Host and `6379` as the Port. Stop/Leave username and password blank.
 
 2. **Install Dependencies**
    If you have `uv` installed:
@@ -35,16 +37,24 @@ This project demonstrates a Model Context Protocol (MCP) server that exposes dat
    pip install .
    ```
 
-3. **Run the Ingestor**
-   Start the Kafka consumer to process messages:
+3. **Prepare the Topic and Schema**
+   You can easily create your topic, register the schema, and optionally feed it with dummy data:
    ```bash
-   python -m mcp_kafka.kafka_to_redis
+   uv run mcp-kafka create-topic my-history
+   uv run mcp-kafka schema
+   uv run mcp-kafka feed my-history
    ```
 
-4. **Run the MCP Server**
-   Start the FastMCP API to expose the data to external tools:
+4. **Run the Ingestor**
+   Start the Kafka consumer to process messages:
    ```bash
-   python -m mcp_kafka.mcp_api
+   uv run mcp-kafka ingest
+   ```
+
+5. **Run the MCP Server**
+   Start the FastMCP API to expose the data to external tools (AI agents):
+   ```bash
+   uv run mcp-kafka api
    ```
 
 ## Configuration
